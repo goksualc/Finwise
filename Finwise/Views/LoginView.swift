@@ -6,33 +6,79 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var isSecure = true
     @State private var showSignUp = false
+    @State private var showHomeView = false
+    @State private var errorMessage = ""
+    @State private var showError = false
+    
+    // Brand Colors
+    private let mintGreen = Color(hex: "8ECFB9")
+    private let lightBlue = Color(hex: "6BAADD")
+    private let darkBlue = Color(hex: "1E4B8E")
+    
+    func loginUser() {
+        Auth.auth().signIn(withEmail: email, password: password) { result, error in
+            if let error = error {
+                errorMessage = error.localizedDescription
+                showError = true
+            } else {
+                // Successfully logged in
+                showHomeView = true
+                print("Successfully logged in user: \(result?.user.uid ?? "")")
+            }
+        }
+    }
     
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background gradient
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color(hex: "1A1F2C"),
-                        Color(hex: "2D3440")
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
+                // Background gradients
+                Color(hex: "1E4B8E").opacity(0.95)
+                    .ignoresSafeArea()
                 
+                VStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [mintGreen.opacity(0.8), lightBlue.opacity(0.8)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 200, height: 200)
+                        .blur(radius: 60)
+                        .offset(x: -100, y: -100)
+                    
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [lightBlue.opacity(0.8), darkBlue.opacity(0.8)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 200, height: 200)
+                        .blur(radius: 60)
+                        .offset(x: 100, y: 200)
+                    
+                    Spacer()
+                }
+                
+                // Content
                 VStack(spacing: 30) {
                     // Logo and title
                     VStack(spacing: 15) {
-                        Image(systemName: "chart.line.uptrend.xyaxis.circle.fill")
-                            .font(.system(size: 60))
-                            .foregroundColor(.white)
+                        Image("AppIcon")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 80, height: 80)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
                         
                         Text("Finwise")
                             .font(.system(size: 32, weight: .bold))
@@ -55,6 +101,10 @@ struct LoginView: View {
                                 .placeholder(when: email.isEmpty) {
                                     Text("Email").foregroundColor(.gray)
                                 }
+                                .textContentType(.emailAddress)
+                                .keyboardType(.emailAddress)
+                                .autocapitalization(.none)
+                                .autocorrectionDisabled()
                         }
                         .padding()
                         .background(Color.white.opacity(0.1))
@@ -70,12 +120,14 @@ struct LoginView: View {
                                     .placeholder(when: password.isEmpty) {
                                         Text("Password").foregroundColor(.gray)
                                     }
+                                    .textContentType(.password)
                             } else {
                                 TextField("", text: $password)
                                     .foregroundColor(.white)
                                     .placeholder(when: password.isEmpty) {
                                         Text("Password").foregroundColor(.gray)
                                     }
+                                    .textContentType(.password)
                             }
                             Button(action: { isSecure.toggle() }) {
                                 Image(systemName: isSecure ? "eye.slash" : "eye")
@@ -90,7 +142,20 @@ struct LoginView: View {
                         HStack {
                             Spacer()
                             Button("Forgot Password?") {
-                                // Handle forgot password
+                                if !email.isEmpty {
+                                    Auth.auth().sendPasswordReset(withEmail: email) { error in
+                                        if let error = error {
+                                            errorMessage = error.localizedDescription
+                                            showError = true
+                                        } else {
+                                            errorMessage = "Password reset email sent!"
+                                            showError = true
+                                        }
+                                    }
+                                } else {
+                                    errorMessage = "Please enter your email first"
+                                    showError = true
+                                }
                             }
                             .foregroundColor(.blue)
                             .font(.subheadline)
@@ -98,7 +163,7 @@ struct LoginView: View {
                         
                         // Login button
                         Button(action: {
-                            // Handle login
+                            loginUser()
                         }) {
                             Text("Login")
                                 .font(.headline)
@@ -133,6 +198,15 @@ struct LoginView: View {
             }
             .navigationDestination(isPresented: $showSignUp) {
                 SignUpView()
+            }
+            .navigationDestination(isPresented: $showHomeView) {
+                HomeView()
+                    .navigationBarBackButtonHidden()
+            }
+            .alert("Message", isPresented: $showError) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage)
             }
         }
     }
