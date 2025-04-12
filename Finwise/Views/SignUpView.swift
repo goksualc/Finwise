@@ -1,5 +1,5 @@
 //
-//  LoginView.swift
+//  SignUpView.swift
 //  Finwise
 //
 //  Created by Göksu Alçınkaya on 4/11/25.
@@ -7,26 +7,29 @@
 
 import SwiftUI
 
-struct LoginView: View {
+struct SignUpView: View {
+    @State private var fullName = ""
     @State private var email = ""
     @State private var password = ""
+    @State private var confirmPassword = ""
     @State private var isSecure = true
-    @State private var showSignUp = false
+    @State private var isConfirmSecure = true
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                // Background gradient
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color(hex: "1A1F2C"),
-                        Color(hex: "2D3440")
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
-                
+        ZStack {
+            // Background gradient
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(hex: "1A1F2C"),
+                    Color(hex: "2D3440")
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+            
+            ScrollView {
                 VStack(spacing: 30) {
                     // Logo and title
                     VStack(spacing: 15) {
@@ -38,14 +41,28 @@ struct LoginView: View {
                             .font(.system(size: 32, weight: .bold))
                             .foregroundColor(.white)
                         
-                        Text("Smart Finance Management")
+                        Text("Create Your Account")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }
-                    .padding(.top, 50)
+                    .padding(.top, 30)
                     
-                    // Login form
+                    // Sign up form
                     VStack(spacing: 20) {
+                        // Full Name field
+                        HStack {
+                            Image(systemName: "person")
+                                .foregroundColor(.gray)
+                            TextField("", text: $fullName)
+                                .foregroundColor(.white)
+                                .placeholder(when: fullName.isEmpty) {
+                                    Text("Full Name").foregroundColor(.gray)
+                                }
+                        }
+                        .padding()
+                        .background(Color.white.opacity(0.1))
+                        .cornerRadius(10)
+                        
                         // Email field
                         HStack {
                             Image(systemName: "envelope")
@@ -86,21 +103,48 @@ struct LoginView: View {
                         .background(Color.white.opacity(0.1))
                         .cornerRadius(10)
                         
-                        // Forgot password
+                        // Confirm Password field
                         HStack {
-                            Spacer()
-                            Button("Forgot Password?") {
-                                // Handle forgot password
+                            Image(systemName: "lock.fill")
+                                .foregroundColor(.gray)
+                            if isConfirmSecure {
+                                SecureField("", text: $confirmPassword)
+                                    .foregroundColor(.white)
+                                    .placeholder(when: confirmPassword.isEmpty) {
+                                        Text("Confirm Password").foregroundColor(.gray)
+                                    }
+                            } else {
+                                TextField("", text: $confirmPassword)
+                                    .foregroundColor(.white)
+                                    .placeholder(when: confirmPassword.isEmpty) {
+                                        Text("Confirm Password").foregroundColor(.gray)
+                                    }
+                            }
+                            Button(action: { isConfirmSecure.toggle() }) {
+                                Image(systemName: isConfirmSecure ? "eye.slash" : "eye")
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                        .padding()
+                        .background(Color.white.opacity(0.1))
+                        .cornerRadius(10)
+                        
+                        // Terms and conditions
+                        HStack(spacing: 4) {
+                            Text("By signing up, you agree to our")
+                                .foregroundColor(.gray)
+                            Button("Terms & Conditions") {
+                                // Handle terms and conditions
                             }
                             .foregroundColor(.blue)
-                            .font(.subheadline)
                         }
+                        .font(.caption)
                         
-                        // Login button
+                        // Sign up button
                         Button(action: {
-                            // Handle login
+                            // Handle sign up
                         }) {
-                            Text("Login")
+                            Text("Sign Up")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
@@ -115,69 +159,25 @@ struct LoginView: View {
                                 .cornerRadius(10)
                         }
                         
-                        // Sign up
+                        // Login
                         HStack {
-                            Text("Don't have an account?")
+                            Text("Already have an account?")
                                 .foregroundColor(.gray)
-                            Button("Sign Up") {
-                                showSignUp = true
+                            Button("Login") {
+                                dismiss()
                             }
                             .foregroundColor(.blue)
                         }
                         .font(.subheadline)
                     }
                     .padding(.horizontal, 30)
-                    
-                    Spacer()
                 }
-            }
-            .navigationDestination(isPresented: $showSignUp) {
-                SignUpView()
+                .padding(.bottom, 30)
             }
         }
-    }
-}
-
-// Extension for hex color
-extension Color {
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let a, r, g, b: UInt64
-        switch hex.count {
-        case 3: // RGB (12-bit)
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            (a, r, g, b) = (1, 1, 1, 0)
-        }
-        self.init(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue:  Double(b) / 255,
-            opacity: Double(a) / 255
-        )
     }
 }
 
 #Preview {
-    LoginView()
-}
-
-extension View {
-    func placeholder<Content: View>(
-        when shouldShow: Bool,
-        alignment: Alignment = .leading,
-        @ViewBuilder placeholder: () -> Content
-    ) -> some View {
-        ZStack(alignment: alignment) {
-            placeholder().opacity(shouldShow ? 1 : 0)
-            self
-        }
-    }
+    SignUpView()
 }
