@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct SignUpView: View {
     @State private var fullName = ""
@@ -14,7 +15,42 @@ struct SignUpView: View {
     @State private var confirmPassword = ""
     @State private var isSecure = true
     @State private var isConfirmSecure = true
+    @State private var errorMessage = ""
+    @State private var showError = false
     @Environment(\.dismiss) private var dismiss
+    
+    func signUpUser() {
+        if password != confirmPassword {
+            errorMessage = "Passwords do not match"
+            showError = true
+            return
+        }
+        
+        if fullName.isEmpty {
+            errorMessage = "Please enter your full name"
+            showError = true
+            return
+        }
+        
+        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+            if let error = error {
+                errorMessage = error.localizedDescription
+                showError = true
+            } else {
+                // Update display name
+                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+                changeRequest?.displayName = fullName
+                changeRequest?.commitChanges { error in
+                    if let error = error {
+                        print("Error updating user profile: \(error.localizedDescription)")
+                    }
+                }
+                // Successfully created user
+                print("Successfully created user: \(result?.user.uid ?? "")")
+                dismiss() // Return to login view
+            }
+        }
+    }
     
     var body: some View {
         ZStack {
@@ -33,9 +69,11 @@ struct SignUpView: View {
                 VStack(spacing: 30) {
                     // Logo and title
                     VStack(spacing: 15) {
-                        Image(systemName: "chart.line.uptrend.xyaxis.circle.fill")
-                            .font(.system(size: 60))
-                            .foregroundColor(.white)
+                        Image("AppIcon")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 80, height: 80)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
                         
                         Text("Finwise")
                             .font(.system(size: 32, weight: .bold))
@@ -58,6 +96,8 @@ struct SignUpView: View {
                                 .placeholder(when: fullName.isEmpty) {
                                     Text("Full Name").foregroundColor(.gray)
                                 }
+                                .textContentType(.name)
+                                .autocapitalization(.words)
                         }
                         .padding()
                         .background(Color.white.opacity(0.1))
@@ -72,6 +112,10 @@ struct SignUpView: View {
                                 .placeholder(when: email.isEmpty) {
                                     Text("Email").foregroundColor(.gray)
                                 }
+                                .textContentType(.emailAddress)
+                                .keyboardType(.emailAddress)
+                                .autocapitalization(.none)
+                                .autocorrectionDisabled()
                         }
                         .padding()
                         .background(Color.white.opacity(0.1))
@@ -87,12 +131,14 @@ struct SignUpView: View {
                                     .placeholder(when: password.isEmpty) {
                                         Text("Password").foregroundColor(.gray)
                                     }
+                                    .textContentType(.newPassword)
                             } else {
                                 TextField("", text: $password)
                                     .foregroundColor(.white)
                                     .placeholder(when: password.isEmpty) {
                                         Text("Password").foregroundColor(.gray)
                                     }
+                                    .textContentType(.newPassword)
                             }
                             Button(action: { isSecure.toggle() }) {
                                 Image(systemName: isSecure ? "eye.slash" : "eye")
@@ -113,12 +159,14 @@ struct SignUpView: View {
                                     .placeholder(when: confirmPassword.isEmpty) {
                                         Text("Confirm Password").foregroundColor(.gray)
                                     }
+                                    .textContentType(.newPassword)
                             } else {
                                 TextField("", text: $confirmPassword)
                                     .foregroundColor(.white)
                                     .placeholder(when: confirmPassword.isEmpty) {
                                         Text("Confirm Password").foregroundColor(.gray)
                                     }
+                                    .textContentType(.newPassword)
                             }
                             Button(action: { isConfirmSecure.toggle() }) {
                                 Image(systemName: isConfirmSecure ? "eye.slash" : "eye")
@@ -142,7 +190,7 @@ struct SignUpView: View {
                         
                         // Sign up button
                         Button(action: {
-                            // Handle sign up
+                            signUpUser()
                         }) {
                             Text("Sign Up")
                                 .font(.headline)
@@ -174,6 +222,11 @@ struct SignUpView: View {
                 }
                 .padding(.bottom, 30)
             }
+        }
+        .alert("Message", isPresented: $showError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage)
         }
     }
 }
