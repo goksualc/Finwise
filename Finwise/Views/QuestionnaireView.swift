@@ -17,6 +17,7 @@ struct QuestionnaireView: View {
     @State private var showError = false
     @State private var errorMessage = ""
     @State private var isLoading = false
+    @State private var showPsychologicalQuestionnaire = false
     
     // Brand Colors
     private let mintGreen = Color(hex: "8ECFB9")
@@ -52,7 +53,7 @@ struct QuestionnaireView: View {
             existingInvestments: existingInvestments.isEmpty ? nil : existingInvestments,
             riskTolerance: selectedRiskTolerance,
             investmentPreferences: Array(selectedInvestmentTypes),
-            hasCompletedQuestionnaire: true,
+            hasCompletedQuestionnaire: false,
             createdAt: Date()
         )
         
@@ -63,7 +64,7 @@ struct QuestionnaireView: View {
                 errorMessage = error.localizedDescription
                 showError = true
             } else {
-                dismiss()
+                showPsychologicalQuestionnaire = true
             }
         }
     }
@@ -192,6 +193,9 @@ struct QuestionnaireView: View {
                 Button("Tamam", role: .cancel) {}
             } message: {
                 Text(errorMessage)
+            }
+            .navigationDestination(isPresented: $showPsychologicalQuestionnaire) {
+                PsychologicalQuestionnaireView()
             }
         }
     }

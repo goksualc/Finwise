@@ -16,6 +16,13 @@ struct UserProfile: Codable {
     var hasCompletedQuestionnaire: Bool
     var createdAt: Date
     
+    // Psychological Assessment Fields
+    var emotionalReactivity: [String: Int]?
+    var cognitiveBiases: [String: Int]?
+    var decisionMakingStyle: [String: Int]?
+    var timePreference: [String: Int]?
+    var personalityTraits: [String: Int]?
+    
     enum RiskTolerance: String, Codable {
         case low = "Düşük (korumacı)"
         case medium = "Orta (dengeleyici)"
@@ -45,7 +52,12 @@ struct UserProfile: Codable {
             "riskTolerance": riskTolerance.rawValue,
             "investmentPreferences": investmentPreferences.map { $0.rawValue },
             "hasCompletedQuestionnaire": hasCompletedQuestionnaire,
-            "createdAt": Timestamp(date: createdAt)
+            "createdAt": Timestamp(date: createdAt),
+            "emotionalReactivity": emotionalReactivity as Any,
+            "cognitiveBiases": cognitiveBiases as Any,
+            "decisionMakingStyle": decisionMakingStyle as Any,
+            "timePreference": timePreference as Any,
+            "personalityTraits": personalityTraits as Any
         ]
     }
 } 
