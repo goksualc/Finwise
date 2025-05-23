@@ -26,6 +26,7 @@ struct HomeView: View {
     private let mintGreen = Color(hex: "8ECFB9")
     private let lightBlue = Color(hex: "6BAADD")
     private let darkBlue = Color(hex: "1E4B8E")
+    private let accentPurple = Color.purple
     
     private func signOut() {
         do {
@@ -81,89 +82,115 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background gradients
-                darkBlue.opacity(0.95)
-                    .ignoresSafeArea()
-                
-                VStack {
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [mintGreen.opacity(0.8), lightBlue.opacity(0.8)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 200, height: 200)
-                        .blur(radius: 60)
-                        .offset(x: -100, y: -100)
-                    
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [lightBlue.opacity(0.8), darkBlue.opacity(0.8)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 200, height: 200)
-                        .blur(radius: 60)
-                        .offset(x: 100, y: 200)
-                    
-                    Spacer()
-                }
-                
-                if isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                } else {
-                    VStack(spacing: 16) {
-                        Text("Welcome, \(Auth.auth().currentUser?.displayName ?? "User")!")
-                            .font(.title)
-                            .foregroundColor(.white)
-                            .padding()
-                        
+                // Animated Gradient Background
+                LinearGradient(
+                    gradient: Gradient(colors: [darkBlue, lightBlue, mintGreen]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+
+                VStack(spacing: 0) {
+                    // Header
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Hoşgeldin,")
+                                .font(.title2)
+                                .foregroundColor(.white.opacity(0.8))
+                            Text(Auth.auth().currentUser?.displayName ?? "Kullanıcı")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                        }
                         Spacer()
-                        
-                        Button(action: presentRiskResult) {
-                            Text("Risk Sonucunu Gör")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .padding()
-                                .background(Color.orange)
-                                .cornerRadius(10)
-                        }
-                        .padding(.bottom, 8)
-                        
-                        NavigationLink(destination: EducationHomeView()) {
-                            Text("Eğitim Merkezi")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .padding()
-                                .background(Color.blue)
-                                .cornerRadius(10)
-                        }
-                        .padding(.bottom, 8)
-                        
-                        NavigationLink(destination: FAQView()) {
-                            Text("Sıkça Sorulan Sorular")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .padding()
-                                .background(Color.green)
-                                .cornerRadius(10)
-                        }
-                        .padding(.bottom, 16)
-                        
                         Button(action: signOut) {
-                            Text("Sign Out")
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                                .font(.title2)
                                 .foregroundColor(.white)
-                                .padding()
-                                .background(lightBlue)
-                                .cornerRadius(10)
+                                .padding(10)
+                                .background(Circle().fill(lightBlue.opacity(0.7)))
                         }
-                        .padding(.bottom)
+                        .accessibilityLabel("Çıkış Yap")
                     }
+                    .padding(.horizontal)
+                    .padding(.top, 40)
+
+                    Spacer().frame(height: 24)
+
+                    // Risk Profile Card
+                    if let riskTitle = currentRiskProfileTitle {
+                        HStack {
+                            Image(systemName: "shield.lefthalf.filled")
+                                .font(.title)
+                                .foregroundColor(accentPurple)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Risk Profilin")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text(riskTitle)
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                            }
+                            Spacer()
+                        }
+                        .padding()
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(16)
+                        .shadow(color: accentPurple.opacity(0.08), radius: 8, x: 0, y: 4)
+                        .padding(.horizontal)
+                        .padding(.bottom, 8)
+                    }
+
+                    // Main Action Cards
+                    VStack(spacing: 18) {
+                        HomeActionCard(
+                            title: "Risk Sonucunu Gör",
+                            subtitle: "Kişisel risk profilini ve önerileri incele.",
+                            icon: "shield.checkerboard",
+                            color: accentPurple
+                        ) {
+                            presentRiskResult()
+                        }
+
+                        HomeActionCard(
+                            title: "Portfolyo Önerileri",
+                            subtitle: "Risk profiline göre yatırım önerileri al.",
+                            icon: "chart.pie.fill",
+                            color: mintGreen
+                        ) {
+                            showPortfolioRecommendation = true
+                        }
+
+                        HomeActionCard(
+                            title: "Eğitim Merkezi",
+                            subtitle: "Yatırım ve finans konularında kendini geliştir.",
+                            icon: "book.closed.fill",
+                            color: lightBlue
+                        ) {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        }
+                        .background(
+                            NavigationLink("", destination: EducationHomeView(), isActive: .constant(false))
+                                .opacity(0)
+                        )
+
+                        HomeActionCard(
+                            title: "Sıkça Sorulan Sorular",
+                            subtitle: "Yatırım ve uygulama hakkında merak ettiklerin.",
+                            icon: "questionmark.circle.fill",
+                            color: darkBlue
+                        ) {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        }
+                        .background(
+                            NavigationLink("", destination: FAQView(), isActive: .constant(false))
+                                .opacity(0)
+                        )
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+
+                    Spacer()
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -189,6 +216,45 @@ struct HomeView: View {
             .onAppear {
                 checkQuestionnaireStatus()
             }
+        }
+    }
+}
+
+// MARK: - Fancy Card Component
+struct HomeActionCard: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    let color: Color
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 16) {
+                ZStack {
+                    Circle()
+                        .fill(color.opacity(0.15))
+                        .frame(width: 48, height: 48)
+                    Image(systemName: icon)
+                        .font(.title2)
+                        .foregroundColor(color)
+                }
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    Text(subtitle)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.secondary)
+            }
+            .padding()
+            .background(.ultraThinMaterial)
+            .cornerRadius(16)
+            .shadow(color: color.opacity(0.08), radius: 8, x: 0, y: 4)
         }
     }
 }
