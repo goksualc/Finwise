@@ -10,6 +10,7 @@ import FirebaseAuth
 import FirebaseFirestore
 
 struct HomeView: View {
+    let onSignOut: () -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var errorMessage = ""
     @State private var showError = false
@@ -21,6 +22,8 @@ struct HomeView: View {
     @State private var currentRiskProfileTitle: String? = nil
     @State private var showRiskResult = false
     @State private var riskResultScore: Int = 30
+    @State private var showEducation = false
+    @State private var showFAQ = false
     
     // Brand Colors
     private let mintGreen = Color(hex: "8ECFB9")
@@ -31,7 +34,7 @@ struct HomeView: View {
     private func signOut() {
         do {
             try Auth.auth().signOut()
-            navigateToLogin = true
+            onSignOut()
         } catch {
             errorMessage = error.localizedDescription
             showError = true
@@ -167,12 +170,8 @@ struct HomeView: View {
                             icon: "book.closed.fill",
                             color: lightBlue
                         ) {
-                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            showEducation = true
                         }
-                        .background(
-                            NavigationLink("", destination: EducationHomeView(), isActive: .constant(false))
-                                .opacity(0)
-                        )
 
                         HomeActionCard(
                             title: "Sıkça Sorulan Sorular",
@@ -180,12 +179,8 @@ struct HomeView: View {
                             icon: "questionmark.circle.fill",
                             color: darkBlue
                         ) {
-                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            showFAQ = true
                         }
-                        .background(
-                            NavigationLink("", destination: FAQView(), isActive: .constant(false))
-                                .opacity(0)
-                        )
                     }
                     .padding(.horizontal)
                     .padding(.top, 8)
@@ -194,11 +189,14 @@ struct HomeView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(isPresented: $navigateToLogin) {
-                LoginView()
-            }
             .navigationDestination(isPresented: $showPortfolioRecommendation) {
                 StockRecommendationView(riskProfile: RiskProfile.profile(for: selectedRiskScore))
+            }
+            .navigationDestination(isPresented: $showEducation) {
+                EducationHomeView()
+            }
+            .navigationDestination(isPresented: $showFAQ) {
+                FAQView()
             }
             .fullScreenCover(isPresented: $showRiskResult) {
                 NavigationStack {
@@ -260,5 +258,5 @@ struct HomeActionCard: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(onSignOut: {})
 }
