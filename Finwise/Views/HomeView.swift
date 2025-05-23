@@ -16,10 +16,11 @@ struct HomeView: View {
     @State private var showQuestionnaire = false
     @State private var isLoading = true
     @State private var navigateToLogin = false
-    @State private var showRiskProfileSheet = false
     @State private var selectedRiskScore: Int = 30 // Default to Balanced
-    @State private var showStockRecommendation = false
+    @State private var showPortfolioRecommendation = false
     @State private var currentRiskProfileTitle: String? = nil
+    @State private var showRiskResult = false
+    @State private var riskResultScore: Int = 30
     
     // Brand Colors
     private let mintGreen = Color(hex: "8ECFB9")
@@ -60,6 +61,20 @@ struct HomeView: View {
             } else {
                 showQuestionnaire = true
             }
+        }
+    }
+    
+    private func presentRiskResult() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        db.collection("userProfiles").document(userId).getDocument { document, error in
+            if let document = document, document.exists,
+               let score = document.data()? ["riskTotalScore"] as? Int {
+                riskResultScore = score
+            } else {
+                riskResultScore = 30 // fallback
+            }
+            showRiskResult = true
         }
     }
     
@@ -110,12 +125,12 @@ struct HomeView: View {
                         
                         Spacer()
                         
-                        Button(action: { showRiskProfileSheet = true }) {
-                            Text("Recommended Investments")
+                        Button(action: presentRiskResult) {
+                            Text("Risk Sonucunu Gör")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding()
-                                .background(Color.purple)
+                                .background(Color.orange)
                                 .cornerRadius(10)
                         }
                         .padding(.bottom, 8)
@@ -155,11 +170,11 @@ struct HomeView: View {
             .navigationDestination(isPresented: $navigateToLogin) {
                 LoginView()
             }
-            .navigationDestination(isPresented: $showStockRecommendation) {
+            .navigationDestination(isPresented: $showPortfolioRecommendation) {
                 StockRecommendationView(riskProfile: RiskProfile.profile(for: selectedRiskScore))
             }
-            .sheet(isPresented: $showRiskProfileSheet) {
-                RiskResultView(totalScore: )
+            .fullScreenCover(isPresented: $showRiskResult) {
+                RiskResultView(totalScore: riskResultScore)
             }
             .alert("Error", isPresented: $showError) {
                 Button("OK", role: .cancel) {}

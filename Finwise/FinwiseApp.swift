@@ -17,7 +17,7 @@ struct FinwiseApp: App {
     
     var body: some Scene {
         WindowGroup {
-            RiskResultView(totalScore: 30)
+            LoginView()
         }
     }
 }
