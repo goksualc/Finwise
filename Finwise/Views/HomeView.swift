@@ -103,25 +103,35 @@ struct HomeView: View {
                         
                         Spacer()
                         
+                        NavigationLink(destination: PortfolioRecommendationView()) {
+                            Text("Portfolyo Onerileri")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.blue)
+                                .cornerRadius(10)
+                        }
+                        .padding(.bottom, 8)
+                        
                         NavigationLink(destination: EducationHomeView()) {
-                               Text("Eğitim Merkezi")
-                                   .font(.headline)
-                                   .foregroundColor(.white)
-                                   .padding()
-                                   .background(Color.blue)
-                                   .cornerRadius(10)
-                           }
-                           .padding(.bottom, 8)
-
-                           NavigationLink(destination: FAQView()) {
-                               Text("Sıkça Sorulan Sorular")
-                                   .font(.headline)
-                                   .foregroundColor(.white)
-                                   .padding()
-                                   .background(Color.green)
-                                   .cornerRadius(10)
-                           }
-                           .padding(.bottom, 16)
+                            Text("Eğitim Merkezi")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.blue)
+                                .cornerRadius(10)
+                        }
+                        .padding(.bottom, 8)
+                        
+                        NavigationLink(destination: FAQView()) {
+                            Text("Sıkça Sorulan Sorular")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.green)
+                                .cornerRadius(10)
+                        }
+                        .padding(.bottom, 16)
                         
                         Button(action: signOut) {
                             Text("Sign Out")

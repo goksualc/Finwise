@@ -7,23 +7,29 @@
 
 import SwiftUI
 
-struct FAQView: View {
-    let faqs = [
-        ("Fon nedir?", "Fon, birçok yatırımcının bir araya gelerek oluşturduğu ve profesyonel yöneticiler tarafından yönetilen yatırım aracıdır."),
-        ("Eurobond nedir?", "Eurobond, yabancı para cinsinden ihraç edilen uzun vadeli borçlanma aracıdır."),
-        // Add more FAQs as needed
-    ]
+let faqList: [(question: String, answer: String)] = [
+    ("Fon nedir?", "Fon, birçok yatırımcının bir araya gelerek oluşturduğu ve profesyonel yöneticiler tarafından yönetilen yatırım aracıdır."),
+    ("Eurobond nedir?", "Eurobond, yabancı para cinsinden ihraç edilen uzun vadeli borçlanma aracıdır.")
+]
 
+struct FAQView: View {
     var body: some View {
-        List(faqs, id: \.0) { faq in
-            VStack(alignment: .leading, spacing: 8) {
-                Text(faq.0)
-                    .font(.headline)
-                Text(faq.1)
-                    .font(.body)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Sıkça Sorulan Sorular")
+                    .font(.title).bold().padding(.bottom)
+
+                ForEach(faqList, id: \.question) { faq in
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(faq.question)
+                            .font(.headline)
+                        Text(faq.answer)
+                            .font(.body)
+                    }
+                    .padding(.bottom)
+                }
             }
-            .padding(.vertical, 4)
+            .padding()
         }
-        .navigationTitle("Sıkça Sorulan Sorular")
     }
 }
