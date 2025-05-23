@@ -2,7 +2,7 @@ import SwiftUI
 
 struct RiskResultView: View {
     let totalScore: Int
-    @State private var showPortfolioRecommendation = false
+    @State private var showStockRecommendation = false
     var riskProfile: RiskProfile {
         RiskProfile.profile(for: totalScore)
     }
@@ -50,9 +50,9 @@ struct RiskResultView: View {
             Spacer()
             
             Button(action: {
-                showPortfolioRecommendation = true
+                showStockRecommendation = true
             }) {
-                Text("View Portfolio Recommendation")
+                Text("View Stock Recommendation")
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
@@ -65,8 +65,8 @@ struct RiskResultView: View {
         }
         .navigationTitle("Risk Profile Result")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(isPresented: $showPortfolioRecommendation) {
-            PortfolioRecommendationView(riskProfile: riskProfile)
+        .navigationDestination(isPresented: $showStockRecommendation) {
+            StockRecommendationView(riskProfile: riskProfile)
         }
     }
 }

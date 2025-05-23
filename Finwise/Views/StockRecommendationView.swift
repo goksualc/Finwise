@@ -25,7 +25,7 @@ struct Stock: Identifiable, Decodable {
     }
 }
 
-struct PortfolioRecommendationView: View {
+struct StockRecommendationView: View {
     let riskProfile: RiskProfile
 
     @State private var stocks: [Stock] = []
@@ -34,7 +34,7 @@ struct PortfolioRecommendationView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            Text("Portfolio Recommendation")
+            Text("Stock Recommendation")
                 .font(.largeTitle).bold().padding(.top)
 
             Text("Risk Profile: \(riskProfile.title)")

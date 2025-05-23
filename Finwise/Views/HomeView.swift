@@ -18,7 +18,7 @@ struct HomeView: View {
     @State private var navigateToLogin = false
     @State private var showRiskProfileSheet = false
     @State private var selectedRiskScore: Int = 30 // Default to Balanced
-    @State private var showPortfolioRecommendation = false
+    @State private var showStockRecommendation = false
     @State private var currentRiskProfileTitle: String? = nil
     
     // Brand Colors
@@ -155,8 +155,8 @@ struct HomeView: View {
             .navigationDestination(isPresented: $navigateToLogin) {
                 LoginView()
             }
-            .navigationDestination(isPresented: $showPortfolioRecommendation) {
-                PortfolioRecommendationView(riskProfile: RiskProfile.profile(for: selectedRiskScore))
+            .navigationDestination(isPresented: $showStockRecommendation) {
+                StockRecommendationView(riskProfile: RiskProfile.profile(for: selectedRiskScore))
             }
             .sheet(isPresented: $showRiskProfileSheet) {
                 RiskProfileSelectionView(onSelect: { score in
@@ -164,7 +164,7 @@ struct HomeView: View {
                     showRiskProfileSheet = false
                     // Delay navigation until after sheet is dismissed
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        showPortfolioRecommendation = true
+                        showStockRecommendation = true
                     }
                 }, currentRiskProfileTitle: currentRiskProfileTitle)
                                          }
