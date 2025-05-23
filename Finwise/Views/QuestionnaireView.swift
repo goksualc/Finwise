@@ -41,6 +41,15 @@ struct QuestionnaireView: View {
         
         isLoading = true
         
+        // Estimate a risk score based on selectedRiskTolerance
+        let riskScore: Int = {
+            switch selectedRiskTolerance {
+            case .low: return 10 // Very Conservative
+            case .medium: return 30 // Balanced
+            case .high: return 50 // Very Aggressive
+            }
+        }()
+        
         let profile = UserProfile(
             userId: userId,
             age: ageInt,
@@ -54,11 +63,16 @@ struct QuestionnaireView: View {
             riskTolerance: selectedRiskTolerance,
             investmentPreferences: Array(selectedInvestmentTypes),
             hasCompletedQuestionnaire: false,
-            createdAt: Date()
+            createdAt: Date(),
+            emotionalReactivity: nil,
+            cognitiveBiases: nil,
+            decisionMakingStyle: nil,
+            timePreference: nil,
+            personalityTraits: nil
         )
         
         let db = Firestore.firestore()
-        db.collection("userProfiles").document(userId).setData(profile.toFirestore()) { error in
+        db.collection("userProfiles").document(userId).setData(profile.toFirestore().merging(["riskProfile": riskScore], uniquingKeysWith: { $1 })) { error in
             isLoading = false
             if let error = error {
                 errorMessage = error.localizedDescription

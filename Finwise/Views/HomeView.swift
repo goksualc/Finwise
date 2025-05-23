@@ -16,6 +16,10 @@ struct HomeView: View {
     @State private var showQuestionnaire = false
     @State private var isLoading = true
     @State private var navigateToLogin = false
+    @State private var showRiskProfileSheet = false
+    @State private var selectedRiskScore: Int = 30 // Default to Balanced
+    @State private var showPortfolioRecommendation = false
+    @State private var currentRiskProfileTitle: String? = nil
     
     // Brand Colors
     private let mintGreen = Color(hex: "8ECFB9")
@@ -49,6 +53,9 @@ struct HomeView: View {
                     showQuestionnaire = !hasCompleted
                 } else {
                     showQuestionnaire = true
+                }
+                if let riskScore = document.data()?["riskProfile"] as? Int {
+                    currentRiskProfileTitle = RiskProfile.profile(for: riskScore).title
                 }
             } else {
                 showQuestionnaire = true
@@ -95,7 +102,7 @@ struct HomeView: View {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                 } else {
-                    VStack {
+                    VStack(spacing: 16) {
                         Text("Welcome, \(Auth.auth().currentUser?.displayName ?? "User")!")
                             .font(.title)
                             .foregroundColor(.white)
@@ -103,12 +110,12 @@ struct HomeView: View {
                         
                         Spacer()
                         
-                        NavigationLink(destination: PortfolioRecommendationView()) {
-                            Text("Portfolyo Onerileri")
+                        Button(action: { showRiskProfileSheet = true }) {
+                            Text("Portfolyo Önerileri")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding()
-                                .background(Color.blue)
+                                .background(Color.purple)
                                 .cornerRadius(10)
                         }
                         .padding(.bottom, 8)
@@ -148,6 +155,19 @@ struct HomeView: View {
             .navigationDestination(isPresented: $navigateToLogin) {
                 LoginView()
             }
+            .navigationDestination(isPresented: $showPortfolioRecommendation) {
+                PortfolioRecommendationView(riskProfile: RiskProfile.profile(for: selectedRiskScore))
+            }
+            .sheet(isPresented: $showRiskProfileSheet) {
+                RiskProfileSelectionView(onSelect: { score in
+                    selectedRiskScore = score
+                    showRiskProfileSheet = false
+                    // Delay navigation until after sheet is dismissed
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        showPortfolioRecommendation = true
+                    }
+                }, currentRiskProfileTitle: currentRiskProfileTitle)
+                                         }
             .alert("Error", isPresented: $showError) {
                 Button("OK", role: .cancel) {}
             } message: {
