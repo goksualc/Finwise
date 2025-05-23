@@ -174,7 +174,9 @@ struct HomeView: View {
                 StockRecommendationView(riskProfile: RiskProfile.profile(for: selectedRiskScore))
             }
             .fullScreenCover(isPresented: $showRiskResult) {
-                RiskResultView(totalScore: riskResultScore)
+                NavigationStack {
+                    RiskResultView(totalScore: riskResultScore)
+                }
             }
             .alert("Error", isPresented: $showError) {
                 Button("OK", role: .cancel) {}
