@@ -15,6 +15,7 @@ struct HomeView: View {
     @State private var showError = false
     @State private var showQuestionnaire = false
     @State private var isLoading = true
+    @State private var navigateToLogin = false
     
     // Brand Colors
     private let mintGreen = Color(hex: "8ECFB9")
@@ -24,7 +25,7 @@ struct HomeView: View {
     private func signOut() {
         do {
             try Auth.auth().signOut()
-            dismiss()
+            navigateToLogin = true
         } catch {
             errorMessage = error.localizedDescription
             showError = true
@@ -101,17 +102,21 @@ struct HomeView: View {
                             .padding()
                         
                         Spacer()
+                        
+                        Button(action: signOut) {
+                            Text("Sign Out")
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(lightBlue)
+                                .cornerRadius(10)
+                        }
+                        .padding(.bottom)
                     }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: signOut) {
-                        Text("Sign Out")
-                            .foregroundColor(.white)
-                    }
-                }
+            .navigationDestination(isPresented: $navigateToLogin) {
+                LoginView()
             }
             .alert("Error", isPresented: $showError) {
                 Button("OK", role: .cancel) {}

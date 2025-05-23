@@ -8,6 +8,8 @@ struct PsychologicalQuestionnaireView: View {
     @State private var showError = false
     @State private var errorMessage = ""
     @State private var isLoading = false
+    @State private var navigateToRiskResult = false
+    @State private var totalScore = 0
     
     // State variables for each section
     @State private var emotionalReactivity = [String: Int]()
@@ -21,6 +23,11 @@ struct PsychologicalQuestionnaireView: View {
     private let lightBlue = Color(hex: "6BAADD")
     private let darkBlue = Color(hex: "1E4B8E")
     
+    private func calculateTotalScore() -> Int {
+        let allAnswers = [emotionalReactivity, cognitiveBiases, decisionMakingStyle, timePreference, personalityTraits]
+        return allAnswers.flatMap { $0.values }.reduce(0, +)
+    }
+    
     private func saveResponses() {
         guard let userId = Auth.auth().currentUser?.uid else {
             errorMessage = "User not found"
@@ -30,21 +37,23 @@ struct PsychologicalQuestionnaireView: View {
         
         isLoading = true
         let db = Firestore.firestore()
-        
+        let score = calculateTotalScore()
         db.collection("userProfiles").document(userId).updateData([
             "emotionalReactivity": emotionalReactivity,
             "cognitiveBiases": cognitiveBiases,
             "decisionMakingStyle": decisionMakingStyle,
             "timePreference": timePreference,
             "personalityTraits": personalityTraits,
-            "hasCompletedQuestionnaire": true
+            "hasCompletedQuestionnaire": true,
+            "riskTotalScore": score
         ]) { error in
             isLoading = false
             if let error = error {
                 errorMessage = error.localizedDescription
                 showError = true
             } else {
-                dismiss()
+                totalScore = score
+                navigateToRiskResult = true
             }
         }
     }
@@ -431,6 +440,9 @@ struct PsychologicalQuestionnaireView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(isPresented: $navigateToRiskResult) {
+                RiskResultView(totalScore: totalScore)
+            }
             .alert("Error", isPresented: $showError) {
                 Button("OK", role: .cancel) {}
             } message: {
