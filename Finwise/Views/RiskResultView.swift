@@ -1,8 +1,15 @@
 import SwiftUI
+import WebKit
+
+struct FundTypeIdentifiable: Identifiable, Equatable {
+    let id: String
+    var fundType: String { id }
+}
 
 struct RiskResultView: View {
     let totalScore: Int
     @State private var showStockRecommendation = false
+    @State private var selectedFundType: FundTypeIdentifiable? = nil
     var riskProfile: RiskProfile {
         RiskProfile.profile(for: totalScore)
     }
@@ -29,7 +36,9 @@ struct RiskResultView: View {
                     .fontWeight(.semibold)
                 VStack(alignment: .leading, spacing: 10) {
                     ForEach(riskProfile.recommendedFunds, id: \.self) { fund in
-                        Button(action: {}) {
+                        Button(action: {
+                            selectedFundType = FundTypeIdentifiable(id: fund)
+                        }) {
                             Text(fund)
                                 .font(.subheadline)
                                 .foregroundColor(riskProfile.color)
@@ -73,6 +82,38 @@ struct RiskResultView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(isPresented: $showStockRecommendation) {
             StockRecommendationView(riskProfile: riskProfile)
+        }
+        .sheet(item: $selectedFundType) { fundTypeIdentifiable in
+            FundTypeETFListView(fundType: fundTypeIdentifiable.fundType)
+        }
+    }
+}
+
+// MARK: - WebView for Yahoo Finance ETF Screener
+struct WebView: UIViewRepresentable {
+    let url: URL
+    func makeUIView(context: Context) -> WKWebView {
+        return WKWebView()
+    }
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        let request = URLRequest(url: url)
+        uiView.load(request)
+    }
+}
+
+struct FundTypeETFListView: View, Identifiable {
+    let fundType: String
+    var id: String { fundType }
+    var yahooURL: URL {
+        let base = "https://finance.yahoo.com/research-hub/screener/etf/?start=0&count=25"
+        let query = fundType.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        return URL(string: "\(base)&query=\(query)")!
+    }
+    var body: some View {
+        NavigationStack {
+            WebView(url: yahooURL)
+                .navigationTitle("\(fundType) ETF'leri")
+                .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
