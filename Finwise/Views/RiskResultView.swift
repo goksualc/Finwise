@@ -27,11 +27,17 @@ struct RiskResultView: View {
                 Text("Recommended Fund Types:")
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                ForEach(riskProfile.recommendedFunds, id: \.self) { fund in
-                    HStack {
-                        Image(systemName: "checkmark.seal.fill")
-                            .foregroundColor(riskProfile.color)
-                        Text(fund)
+                VStack(alignment: .leading, spacing: 10) {
+                    ForEach(riskProfile.recommendedFunds, id: \.self) { fund in
+                        Button(action: {}) {
+                            Text(fund)
+                                .font(.subheadline)
+                                .foregroundColor(riskProfile.color)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(riskProfile.color.opacity(0.12))
+                                .cornerRadius(8)
+                        }
                     }
                 }
             }
