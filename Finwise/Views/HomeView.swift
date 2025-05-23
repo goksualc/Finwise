@@ -111,7 +111,7 @@ struct HomeView: View {
                         Spacer()
                         
                         Button(action: { showRiskProfileSheet = true }) {
-                            Text("Portfolyo Önerileri")
+                            Text("Recommended Investments")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding()
@@ -159,15 +159,8 @@ struct HomeView: View {
                 StockRecommendationView(riskProfile: RiskProfile.profile(for: selectedRiskScore))
             }
             .sheet(isPresented: $showRiskProfileSheet) {
-                RiskProfileSelectionView(onSelect: { score in
-                    selectedRiskScore = score
-                    showRiskProfileSheet = false
-                    // Delay navigation until after sheet is dismissed
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        showStockRecommendation = true
-                    }
-                }, currentRiskProfileTitle: currentRiskProfileTitle)
-                                         }
+                RiskResultView(totalScore: )
+            }
             .alert("Error", isPresented: $showError) {
                 Button("OK", role: .cancel) {}
             } message: {

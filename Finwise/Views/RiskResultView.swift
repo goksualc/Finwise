@@ -105,10 +105,45 @@ struct FundTypeETFListView: View, Identifiable {
     let fundType: String
     var id: String { fundType }
     var yahooURL: URL {
-        let base = "https://finance.yahoo.com/research-hub/screener/etf/?start=0&count=25"
-        let query = fundType.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        return URL(string: "\(base)&query=\(query)")!
+        let fundTypeKeywordMap: [String: String] = [
+            "Long Term Bond ETFs 80%": "long term bond etf",
+            "Commoditie Broad Basket 10%": "commodity broad basket etf",
+            "Large Value 10%": "large value etf",
+            
+            "Long Term Bond ETFs 30%": "long term bond etf",
+            "Corporate Bond 20%": "corporate bond etf",
+            "Equity ETFs (Large Cap) 20%": "large cap equity etf",
+            "Europe Stock 10%": "europe stock etf",
+            "Commodity ETFs (Gold) 10%": "gold etf",
+            "Emerging Market Bond ETFs 10%": "emerging bond etf",
+            
+            "Large Value 30%": "large value etf",
+            "Large Growth 10%": "large growth etf",
+            "China 10%": "china etf",
+            "Europe 10%": "europe etf",
+            "Emerging Market ETFs 10%": "emerging market etf",
+            "Bond ETFs 20%": "bond etf",
+            "Alternative ETFs (Gold, REIT) 10%": "reit gold etf",
+            
+            "Large Growth ETFs 50%": "large growth etf",
+            "Europe Stock 25%": "europe stock etf",
+            "Technology ETFs (AI, Disruptive) 10%": "ai technology disruptive etf",
+            "Sector ETFs (Tech, Healthcare) 10%": "sector tech healthcare etf",
+            "Bond ETFs 5%": "bond etf",
+            
+            "Technology ETFs (AI, Blockchain) 20%": "ai blockchain etf",
+            "Large Growth ETFs 20%": "large growth etf",
+            "Mid-cap Growth 20%": "mid cap growth etf",
+            "Emerging Market ETFs 20%": "emerging market etf",
+            "Crypto-related ETFs 10%": "crypto etf",
+            "Sector ETFs (Biotech, Clean) 10%": "biotech clean energy etf"
+        ]
+        
+        let keyword = fundTypeKeywordMap[fundType.trimmingCharacters(in: .whitespaces)] ?? "etf"
+        let encodedKeyword = keyword.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "etf"
+        return URL(string: "https://finance.yahoo.com/lookup/etf?s=\(encodedKeyword)")!
     }
+
     var body: some View {
         NavigationStack {
             WebView(url: yahooURL)
