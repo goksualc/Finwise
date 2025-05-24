@@ -14,10 +14,12 @@
 		75667ED92DAA02F200FD48D2 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 75667ED82DAA02F200FD48D2 /* FirebaseFirestore */; };
 		75667EDB2DAA02F200FD48D2 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 75667EDA2DAA02F200FD48D2 /* FirebaseFunctions */; };
 		75667EDD2DAA02F200FD48D2 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 75667EDC2DAA02F200FD48D2 /* FirebaseStorage */; };
+		7585BCC82DE274BA00EFFEFC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 7585BCC62DE274AB00EFFEFC /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		7515C7222DA9F6A4003287B4 /* Finwise.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Finwise.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7585BCC62DE274AB00EFFEFC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -51,6 +53,7 @@
 			children = (
 				75667EC42DA9F86100FD48D2 /* Finwise */,
 				7515C7232DA9F6A4003287B4 /* Products */,
+				7585BCC62DE274AB00EFFEFC /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -136,6 +139,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7585BCC82DE274BA00EFFEFC /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
