@@ -4,18 +4,19 @@ struct RiskProfileSelectionView: View {
     let onSelect: (Int) -> Void
     let currentRiskProfileTitle: String?
     let profiles: [(String, Int)] = [
-        ("Çok Koruyucu (0–12)", 6),
-        ("Koruyucu (13–24)", 18),
-        ("Dengeli (25–36)", 30),
-        ("Agresif (37–48)", 42),
-        ("Çok Agresif (49–60)", 55)
+        ("Very Conservative (0–12)", 6),
+        ("Conservative (13–24)", 18),
+        ("Balanced (25–36)", 30),
+        ("Aggressive (37–48)", 42),
+        ("Very Aggressive (49–60)", 55)
+
     ]
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 8) {
                 if let current = currentRiskProfileTitle {
-                    Text("Mevcut risk profiliniz: \(current)")
+                    Text("Your current risk profile: \(current)")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .padding(.top, 4)

@@ -92,54 +92,54 @@ struct QuestionnaireView: View {
                 
                 ScrollView {
                     VStack(spacing: 20) {
-                        Text("Profil Bilgileri")
+                        Text("Profile")
                             .font(.title)
                             .foregroundColor(.white)
                             .padding(.top)
                         
                         // Age and Contact Info
                         Group {
-                            CustomTextField(text: $age, placeholder: "Yaş", keyboardType: .numberPad)
-                            CustomTextField(text: $contactInfo, placeholder: "E-posta / Telefon")
+                            CustomTextField(text: $age, placeholder: "Age", keyboardType: .numberPad)
+                            CustomTextField(text: $contactInfo, placeholder: "E-mail / Phone")
                         }
                         
                         // Income Information
                         Group {
-                            Text("Gelir Durumu")
+                            Text("Income")
                                 .font(.headline)
                                 .foregroundColor(.white)
                             
-                            CustomTextField(text: $monthlyIncome, placeholder: "Aylık net gelir", keyboardType: .decimalPad)
-                            CustomTextField(text: $additionalIncome, placeholder: "Ek gelirler (varsa)", keyboardType: .decimalPad)
+                            CustomTextField(text: $monthlyIncome, placeholder: "Monthly net income", keyboardType: .decimalPad)
+                            CustomTextField(text: $additionalIncome, placeholder: "Additional income (if any)", keyboardType: .decimalPad)
                         }
                         
                         // Financial Goals
                         Group {
-                            Text("Finansal Hedefler")
+                            Text("Financial Goals")
                                 .font(.headline)
                                 .foregroundColor(.white)
                             
-                            CustomTextField(text: $financialGoals, placeholder: "Hedefleriniz (virgülle ayırın)")
-                            CustomTextField(text: $timelineForGoals, placeholder: "Hedeflerinize ulaşmak için öngördüğünüz zaman")
+                            CustomTextField(text: $financialGoals, placeholder: "Your goals (separate with commas)")
+                            CustomTextField(text: $timelineForGoals, placeholder: "Estimated time to achieve your goals")
                         }
                         
                         // Current Financial Status
                         Group {
-                            Text("Mevcut Finansal Durum")
+                            Text("Current Financial Situation")
                                 .font(.headline)
                                 .foregroundColor(.white)
                             
-                            CustomTextField(text: $monthlyExpenses, placeholder: "Aylık sabit giderleriniz", keyboardType: .decimalPad)
-                            CustomTextField(text: $existingInvestments, placeholder: "Var olan yatırımlarınız (varsa)")
+                            CustomTextField(text: $monthlyExpenses, placeholder: "Your monthly fixed expenses", keyboardType: .decimalPad)
+                            CustomTextField(text: $existingInvestments, placeholder: "Your existing investments (if any)")
                         }
                         
                         // Risk Tolerance
                         Group {
-                            Text("Risk Toleransı")
+                            Text("Risk Tolerance")
                                 .font(.headline)
                                 .foregroundColor(.white)
                             
-                            Picker("Risk Toleransı", selection: $selectedRiskTolerance) {
+                            Picker("Risk Tolerance", selection: $selectedRiskTolerance) {
                                 Text(UserProfile.RiskTolerance.low.rawValue).tag(UserProfile.RiskTolerance.low)
                                 Text(UserProfile.RiskTolerance.medium.rawValue).tag(UserProfile.RiskTolerance.medium)
                                 Text(UserProfile.RiskTolerance.high.rawValue).tag(UserProfile.RiskTolerance.high)
@@ -150,7 +150,7 @@ struct QuestionnaireView: View {
                         
                         // Investment Preferences
                         Group {
-                            Text("Yatırım Tercihleri")
+                            Text("Investment Preferences")
                                 .font(.headline)
                                 .foregroundColor(.white)
                             
@@ -181,7 +181,7 @@ struct QuestionnaireView: View {
                                 ProgressView()
                                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
                             } else {
-                                Text("Kaydet")
+                                Text("Save")
                                     .font(.headline)
                                     .foregroundColor(.white)
                                     .frame(maxWidth: .infinity)
@@ -203,8 +203,8 @@ struct QuestionnaireView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .alert("Hata", isPresented: $showError) {
-                Button("Tamam", role: .cancel) {}
+            .alert("ERROR", isPresented: $showError) {
+                Button("OK", role: .cancel) {}
             } message: {
                 Text(errorMessage)
             }

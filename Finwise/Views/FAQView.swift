@@ -9,8 +9,9 @@ import SwiftUI
 
 struct FAQView: View {
     let faqs = [
-        ("Fon nedir?", "Fon, birçok yatırımcının bir araya gelerek oluşturduğu ve profesyonel yöneticiler tarafından yönetilen yatırım aracıdır."),
-        ("Eurobond nedir?", "Eurobond, yabancı para cinsinden ihraç edilen uzun vadeli borçlanma aracıdır."),
+("What is a Fund?", "A fund is an investment vehicle formed by pooling the capital of multiple investors and managed by professional portfolio managers."),
+("What is a Eurobond?", "A Eurobond is a long-term debt instrument issued in a foreign currency, typically used by governments or corporations to attract international investors."),
+
         // Add more FAQs as needed
     ]
 
@@ -35,11 +36,11 @@ struct FAQView: View {
                         .font(.system(size: 32))
                         .foregroundColor(accentPurple)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Sıkça Sorulan Sorular")
+                        Text("FAQ")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
-                        Text("Yatırım ve uygulama hakkında merak ettiklerin.")
+                        Text("Things you're curious about regarding investment and the app.")
                             .font(.subheadline)
                             .foregroundColor(.white.opacity(0.7))
                     }

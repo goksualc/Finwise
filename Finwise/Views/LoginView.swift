@@ -181,6 +181,17 @@ struct LoginView: View {
                     }
                 }
                 .padding(.horizontal, 30)
+                
+                // Sign up button
+                HStack {
+                    Text("Don't have an account?")
+                        .foregroundColor(.gray)
+                    Button("Sign Up") {
+                        showSignUp = true
+                    }
+                    .foregroundColor(.blue)
+                }
+                .font(.subheadline)
             }
             .padding(.bottom, 30)
         }
@@ -188,6 +199,9 @@ struct LoginView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(errorMessage)
+        }
+        .sheet(isPresented: $showSignUp) {
+            SignUpView()
         }
     }
 }

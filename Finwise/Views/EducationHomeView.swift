@@ -9,9 +9,9 @@ import SwiftUI
 
 struct EducationHomeView: View {
     let topics = [
-        ("Fon Nedir?", "Fon nedir? Detaylı açıklama..."),
-        ("Eurobond Nedir?", "Eurobond nedir? Detaylı açıklama..."),
-        ("Altın Yatırımı", "Altın yatırımı nedir? Detaylı açıklama..."),
+    ("What is a Fund?", "A fund is a pooled investment vehicle where money from multiple investors is collected and managed by professionals to invest in a variety of financial instruments such as stocks, bonds, or other assets."),
+    ("What is a Eurobond?", "A eurobond is a type of debt security issued in a currency different from the currency of the country or market in which it is issued. They are typically used by governments or corporations to raise capital from international investors."),
+    ("Gold Investment", "Gold investment refers to buying gold in physical or financial form (such as gold ETFs or gold stocks) as a way to hedge against inflation and economic uncertainty. It is considered a safe haven asset during market volatility."),
         // Add more topics as needed
     ]
 
@@ -40,7 +40,7 @@ struct EducationHomeView: View {
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
-                        Text("Yatırım ve finans konularında kendini geliştir.")
+                        Text("Improve yourself in investment and finance topics.")
                             .font(.subheadline)
                             .foregroundColor(.white.opacity(0.7))
                     }

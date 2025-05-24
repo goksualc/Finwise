@@ -24,18 +24,20 @@ struct UserProfile: Codable {
     var personalityTraits: [String: Int]?
     
     enum RiskTolerance: String, Codable {
-        case low = "Düşük (korumacı)"
-        case medium = "Orta (dengeleyici)"
-        case high = "Yüksek (agresif)"
+        case low = "Low (conservative)"
+        case medium = "Medium (balanced)"
+        case high = "High (aggressive)"
+
     }
     
     enum InvestmentType: String, Codable {
-        case deposit = "Mevduat"
-        case mutualFunds = "Yatırım Fonları"
-        case stocks = "Hisse Senetleri"
-        case commodities = "Emtia (altın, gümüş vb.)"
-        case crypto = "Kripto para"
-        case other = "Diğer"
+        case deposit = "Deposit"
+        case mutualFunds = "Mutual Funds"
+        case stocks = "Stocks"
+        case commodities = "Commodities (gold, silver, etc.)"
+        case crypto = "Cryptocurrency"
+        case other = "Other"
+
     }
     
     func toFirestore() -> [String: Any] {

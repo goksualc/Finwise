@@ -123,7 +123,7 @@ struct FundTypeETFListView: View, Identifiable {
     var body: some View {
         NavigationStack {
             WebView(url: yahooURL)
-                .navigationTitle("\(fundType) ETF'leri")
+                .navigationTitle("\(fundType) ETF's")
                 .navigationBarTitleDisplayMode(.inline)
         }
     }

@@ -97,10 +97,10 @@ struct HomeView: View {
                     // Header
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Hoşgeldin,")
+                            Text("Welcome,")
                                 .font(.title2)
                                 .foregroundColor(.white.opacity(0.8))
-                            Text(Auth.auth().currentUser?.displayName ?? "Kullanıcı")
+                            Text(Auth.auth().currentUser?.displayName ?? "User")
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
@@ -113,7 +113,7 @@ struct HomeView: View {
                                 .padding(10)
                                 .background(Circle().fill(lightBlue.opacity(0.7)))
                         }
-                        .accessibilityLabel("Çıkış Yap")
+                        .accessibilityLabel("Sign Out")
                     }
                     .padding(.horizontal)
                     .padding(.top, 40)
@@ -127,7 +127,7 @@ struct HomeView: View {
                                 .font(.title)
                                 .foregroundColor(accentPurple)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("Risk Profilin")
+                                Text("Risk Profile")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Text(riskTitle)
@@ -147,8 +147,8 @@ struct HomeView: View {
                     // Main Action Cards
                     VStack(spacing: 18) {
                         HomeActionCard(
-                            title: "Risk Sonucunu Gör",
-                            subtitle: "Kişisel risk profilini ve önerileri incele.",
+                            title: "View Risk Result",
+                            subtitle: "Review your personal risk profile and recommendations.",
                             icon: "shield.checkerboard",
                             color: accentPurple
                         ) {
@@ -156,8 +156,8 @@ struct HomeView: View {
                         }
 
                         HomeActionCard(
-                            title: "Portfolyo Önerileri",
-                            subtitle: "Risk profiline göre yatırım önerileri al.",
+                            title: "Portfolio Suggestions",
+                            subtitle: "Get investment suggestions based on your risk profile.",
                             icon: "chart.pie.fill",
                             color: mintGreen
                         ) {
@@ -165,8 +165,8 @@ struct HomeView: View {
                         }
 
                         HomeActionCard(
-                            title: "Eğitim Merkezi",
-                            subtitle: "Yatırım ve finans konularında kendini geliştir.",
+                            title: "Education Center",
+                            subtitle: "Improve yourself in investment and finance topics.",
                             icon: "book.closed.fill",
                             color: lightBlue
                         ) {
@@ -174,8 +174,8 @@ struct HomeView: View {
                         }
 
                         HomeActionCard(
-                            title: "Sıkça Sorulan Sorular",
-                            subtitle: "Yatırım ve uygulama hakkında merak ettiklerin.",
+                            title: "FAQ",
+                            subtitle: "Your questions about investment and the app.",
                             icon: "questionmark.circle.fill",
                             color: darkBlue
                         ) {
