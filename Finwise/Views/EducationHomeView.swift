@@ -36,7 +36,7 @@ struct EducationHomeView: View {
                         .font(.system(size: 32))
                         .foregroundColor(mintGreen)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Eğitim Merkezi")
+                        Text("Education Center")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .foregroundColor(.white)

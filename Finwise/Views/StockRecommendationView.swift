@@ -32,35 +32,98 @@ struct StockRecommendationView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
 
+    // Brand Colors
+    private let mintGreen = Color(hex: "8ECFB9")
+    private let lightBlue = Color(hex: "6BAADD")
+    private let darkBlue = Color(hex: "1E4B8E")
+    private let accentPurple = Color.purple
+
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Stock Recommendation")
-                .font(.largeTitle).bold().padding(.top)
+        ZStack {
+            LinearGradient(
+                gradient: Gradient(colors: [darkBlue, lightBlue, mintGreen]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
 
-            Text("Risk Profile: \(riskProfile.title)")
-                .font(.headline).foregroundColor(riskProfile.color)
+            VStack(spacing: 0) {
+                // Header
+                HStack(spacing: 12) {
+                    Image(systemName: "chart.pie.fill")
+                        .font(.system(size: 32))
+                        .foregroundColor(mintGreen)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Portfolio Recommendations")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                        Text("Investment recommendations based on your risk profile.")
+                            .font(.subheadline)
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                    Spacer()
+                }
+                .padding([.top, .horizontal])
+                .padding(.bottom, 12)
 
-            if isLoading {
-                ProgressView("Loading EOD data...")
-            } else if let errorMessage = errorMessage {
-                Text(errorMessage).foregroundColor(.red)
-            } else {
-                List(stocks.prefix(10)) { stock in
-                    VStack(alignment: .leading) {
-                        Text(stock.displaySymbol).font(.headline)
-                        Text(stock.description).font(.subheadline).foregroundColor(.secondary)
-                        if let change = stock.weeklyChange {
-                            Text(String(format: "1-Day Change: %.2f%%", change))
-                                .font(.caption)
-                                .foregroundColor(change < 0 ? .red : .green)
+                if isLoading {
+                    Spacer()
+                    ProgressView("Loading data...")
+                        .progressViewStyle(CircularProgressViewStyle(tint: mintGreen))
+                    Spacer()
+                } else if let errorMessage = errorMessage {
+                    Spacer()
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(14)
+                        .shadow(color: Color.red.opacity(0.08), radius: 6, x: 0, y: 3)
+                        .padding(.horizontal)
+                    Spacer()
+                } else {
+                    ScrollView {
+                        VStack(spacing: 18) {
+                            ForEach(stocks.prefix(10)) { stock in
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack(spacing: 10) {
+                                        Image(systemName: "chart.line.uptrend.xyaxis")
+                                            .foregroundColor(accentPurple)
+                                            .font(.title2)
+                                        Text(stock.displaySymbol)
+                                            .font(.headline)
+                                            .foregroundColor(.primary)
+                                        Spacer()
+                                        if let change = stock.weeklyChange {
+                                            Text(String(format: "%+.2f%%", change))
+                                                .font(.subheadline)
+                                                .fontWeight(.semibold)
+                                                .foregroundColor(change < 0 ? .red : .green)
+                                        }
+                                    }
+                                    Text(stock.description)
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                    if let price = stock.currentPrice {
+                                        Text(String(format: "Fiyat: $%.2f", price))
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                                .padding()
+                                .background(.ultraThinMaterial)
+                                .cornerRadius(16)
+                                .shadow(color: accentPurple.opacity(0.08), radius: 8, x: 0, y: 4)
+                                .padding(.horizontal)
+                            }
                         }
+                        .padding(.bottom, 24)
                     }
                 }
             }
-
-            Spacer()
         }
-        .padding()
+        .navigationBarTitleDisplayMode(.inline)
         .onAppear(perform: fetchAllStocks)
     }
 
