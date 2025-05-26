@@ -109,8 +109,10 @@ struct QuestionnaireView: View {
                                 .font(.headline)
                                 .foregroundColor(.white)
                             
-                            CustomTextField(text: $monthlyIncome, placeholder: "Monthly net income", keyboardType: .decimalPad)
-                            CustomTextField(text: $additionalIncome, placeholder: "Additional income (if any)", keyboardType: .decimalPad)
+                            CustomTextField(text: $monthlyIncome, placeholder: "Bonds as $", keyboardType: .decimalPad)
+                            CustomTextField(text: $additionalIncome, placeholder: "Cash as $", keyboardType: .decimalPad)
+                            CustomTextField(text: $monthlyIncome, placeholder: "Gold as $", keyboardType: .decimalPad)
+                            CustomTextField(text: $additionalIncome, placeholder: "Stocks as $)", keyboardType: .decimalPad)
                         }
                         
                         // Financial Goals

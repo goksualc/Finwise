@@ -68,7 +68,7 @@ struct RiskResultView: View {
                         .padding(.horizontal)
 
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Önerilen Fon Türleri:")
+                            Text("Reccomended Fons:")
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                             VStack(alignment: .leading, spacing: 10) {

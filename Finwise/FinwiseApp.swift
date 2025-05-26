@@ -1,9 +1,9 @@
 //
 //  FinwiseApp.swift
 //  Finwise
+
 //
-//  Created by Göksu Alçınkaya on 4/11/25.
-//
+//  Created by Göksu Alçınkaya on 4/11/25.//
 
 import SwiftUI
 import FirebaseCore

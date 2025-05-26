@@ -110,6 +110,13 @@ struct StockRecommendationView: View {
                                             .font(.caption)
                                             .foregroundColor(.secondary)
                                     }
+                                    if let c = stock.currentPrice, let pc = stock.previousClose {
+                                        let diff = c - pc
+                                        Text(String(format: "Günlük Değişim: %+.2f", diff))
+                                            .font(.caption2)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(diff > 0 ? .green : (diff < 0 ? .red : .gray))
+                                    }
                                 }
                                 .padding()
                                 .background(.ultraThinMaterial)
@@ -203,32 +210,8 @@ struct StockRecommendationView: View {
     // 🔍 Dynamic Filtering Based on Risk Profile
     func filterStocksByRiskProfile(stocks: [Stock]) -> [Stock] {
         let validStocks = stocks.filter { $0.weeklyChange != nil }
-
-        switch riskProfile.title {
-        case let title where title.contains("Very Conservative"):
-            return validStocks.sorted { abs($0.weeklyChange!) < abs($1.weeklyChange!) }
-
-        case let title where title.contains("Conservative"):
-            return validStocks.sorted {
-                guard let c1 = $0.weeklyChange, let c2 = $1.weeklyChange else { return false }
-                return c1 < c2 // prefer smaller but positive returns
-            }
-
-        case let title where title.contains("Balanced"):
-            return validStocks.sorted {
-                guard let c1 = $0.weeklyChange, let c2 = $1.weeklyChange else { return false }
-                return abs(c1 - 5.0) < abs(c2 - 5.0) // centered around ~5% growth
-            }
-
-        case let title where title.contains("Aggressive"):
-            return validStocks.sorted {
-                guard let c1 = $0.weeklyChange, let c2 = $1.weeklyChange else { return false }
-                return c1 > c2 // high to low performance
-            }
-
-        default:
-            return validStocks
-        }
+        // Sort by weeklyChange descending (highest positive change first)
+        return validStocks.sorted { ($0.weeklyChange ?? 0) > ($1.weeklyChange ?? 0) }
     }
 }
 

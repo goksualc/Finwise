@@ -9,11 +9,21 @@ import SwiftUI
 
 struct FAQView: View {
     let faqs = [
-("What is a Fund?", "A fund is an investment vehicle formed by pooling the capital of multiple investors and managed by professional portfolio managers."),
-("What is a Eurobond?", "A Eurobond is a long-term debt instrument issued in a foreign currency, typically used by governments or corporations to attract international investors."),
-
-        // Add more FAQs as needed
+        ("What is Finwise?", "Finwise is a mobile app that helps users discover their investment risk profile and provides personalized portfolio suggestions."),
+        ("What is the purpose of Finwise?", "The goal of Finwise is to make investing more accessible by offering educational and customized investment guidance, especially for beginners."),
+        ("How is my risk profile determined?", "By answering a 20-question psychological test. Your score (0–60) places you in one of five segments: Very Conservative, Conservative, Balanced, Aggressive, or Very Aggressive."),
+        ("Why is the risk profile important?", "Your risk profile helps match your risk tolerance to suitable investment products, ensuring a more comfortable investment experience."),
+        ("Can I change my risk profile?", "Yes. You can retake the risk test at any time to update your profile based on new circumstances or preferences."),
+        ("How are portfolio suggestions generated?", "Portfolios are mapped to your risk level using predefined asset mixes, based on real Turkish mutual fund (TEFAS) data."),
+        ("Is Finwise giving investment advice?", "No. Finwise is an educational tool. It does not provide official financial or investment advice."),
+        ("What is the Education Center?", "It’s a section of the app with beginner-friendly explanations of investment terms like mutual funds, gold, and eurobonds — all in Turkish."),
+        ("Who creates the educational content?", "Our team curates educational content using verified financial sources and adapts it for beginner investors in Türkiye."),
+        ("Is my personal data secure?", "Yes. We use Firebase to securely store minimal data, and the app is compliant with KVKK and GDPR data protection laws."),
+        ("Does the app collect sensitive financial data?", "No. Finwise does not collect or store any bank or wallet information, nor does it perform financial transactions."),
+        ("Can I use Finwise offline?", "Some content may be available offline, but features like the risk test and portfolio updates require internet access."),
+        ("What are the future plans for Finwise?", "We plan to add TEFAS API integration, gamified learning, smart recommendations via ML, and broader user testing via TestFlight.")
     ]
+
 
     // Brand Colors
     private let mintGreen = Color(hex: "8ECFB9")
