@@ -78,12 +78,16 @@ struct HomeView: View {
         let db = Firestore.firestore()
         db.collection("userProfiles").document(userId).getDocument { document, error in
             if let document = document, document.exists,
-               let score = document.data()? ["riskTotalScore"] as? Int {
+               let score = document.data()?["riskTotalScore"] as? Int {
                 riskResultScore = score
             } else {
-                riskResultScore = 30 // fallback
+                riskResultScore = 30
             }
-            showRiskResult = true
+            
+            // Delay showing the view until score is set
+            DispatchQueue.main.async {
+                showRiskResult = true
+            }
         }
     }
     
@@ -235,7 +239,7 @@ struct HomeView: View {
             }
             .fullScreenCover(isPresented: $showRiskResult) {
                 NavigationStack {
-                    RiskResultView(totalScore: riskResultScore)
+                    RiskResultView(totalScore: $riskResultScore)
                 }
             }
             .alert("Error", isPresented: $showError) {

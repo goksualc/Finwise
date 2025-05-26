@@ -441,7 +441,7 @@ struct PsychologicalQuestionnaireView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(isPresented: $navigateToRiskResult) {
-                RiskResultView(totalScore: totalScore)
+                RiskResultView(totalScore: $totalScore)
             }
             .alert("Error", isPresented: $showError) {
                 Button("OK", role: .cancel) {}

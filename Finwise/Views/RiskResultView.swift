@@ -7,7 +7,7 @@ struct FundTypeIdentifiable: Identifiable, Equatable {
 }
 
 struct RiskResultView: View {
-    let totalScore: Int
+    @Binding var totalScore: Int
     @Environment(\.dismiss) private var dismiss
     @State private var showStockRecommendation = false
     @State private var selectedFundType: FundTypeIdentifiable? = nil
@@ -151,17 +151,3 @@ struct WebView: UIViewRepresentable {
         uiView.load(request)
     }
 }
-
-#if DEBUG
-struct RiskResultView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            RiskResultView(totalScore: 10)
-            RiskResultView(totalScore: 20)
-            RiskResultView(totalScore: 30)
-            RiskResultView(totalScore: 40)
-            RiskResultView(totalScore: 55)
-        }
-    }
-}
-#endif 
