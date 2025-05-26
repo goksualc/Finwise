@@ -5,14 +5,14 @@ import FirebaseAuth
 struct QuestionnaireView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var age = ""
-    @State private var contactInfo = ""
-    @State private var monthlyIncome = ""
-    @State private var additionalIncome = ""
+    @State private var gold = ""
+    @State private var bond = ""
+    @State private var cash = ""
+    @State private var stocks = ""
     @State private var financialGoals = ""
     @State private var timelineForGoals = ""
     @State private var monthlyExpenses = ""
     @State private var existingInvestments = ""
-    @State private var selectedRiskTolerance: UserProfile.RiskTolerance = .medium
     @State private var selectedInvestmentTypes: Set<UserProfile.InvestmentType> = []
     @State private var showError = false
     @State private var errorMessage = ""
@@ -32,7 +32,10 @@ struct QuestionnaireView: View {
         }
         
         guard let ageInt = Int(age),
-              let monthlyIncomeDouble = Double(monthlyIncome),
+              let goldDouble = Double(gold),
+              let bondDouble = Double(bond),
+              let cashDouble = Double(cash),
+              let stocksDouble = Double(stocks),
               let monthlyExpensesDouble = Double(monthlyExpenses) else {
             errorMessage = "Please enter valid numbers"
             showError = true
@@ -41,26 +44,17 @@ struct QuestionnaireView: View {
         
         isLoading = true
         
-        // Estimate a risk score based on selectedRiskTolerance
-        let riskScore: Int = {
-            switch selectedRiskTolerance {
-            case .low: return 10 // Very Conservative
-            case .medium: return 30 // Balanced
-            case .high: return 50 // Very Aggressive
-            }
-        }()
-        
         let profile = UserProfile(
             userId: userId,
             age: ageInt,
-            contactInfo: contactInfo,
-            monthlyIncome: monthlyIncomeDouble,
-            additionalIncome: Double(additionalIncome),
+            gold: goldDouble,
+            bond: bondDouble,
+            cash: cashDouble,
+            stocks: stocksDouble,
             financialGoals: financialGoals.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) },
             timelineForGoals: timelineForGoals,
             monthlyExpenses: monthlyExpensesDouble,
             existingInvestments: existingInvestments.isEmpty ? nil : existingInvestments,
-            riskTolerance: selectedRiskTolerance,
             investmentPreferences: Array(selectedInvestmentTypes),
             hasCompletedQuestionnaire: false,
             createdAt: Date(),
@@ -72,7 +66,7 @@ struct QuestionnaireView: View {
         )
         
         let db = Firestore.firestore()
-        db.collection("userProfiles").document(userId).setData(profile.toFirestore().merging(["riskProfile": riskScore], uniquingKeysWith: { $1 })) { error in
+        db.collection("userProfiles").document(userId).setData(profile.toFirestore()) { error in
             isLoading = false
             if let error = error {
                 errorMessage = error.localizedDescription
@@ -100,19 +94,17 @@ struct QuestionnaireView: View {
                         // Age and Contact Info
                         Group {
                             CustomTextField(text: $age, placeholder: "Age", keyboardType: .numberPad)
-                            CustomTextField(text: $contactInfo, placeholder: "E-mail / Phone")
                         }
                         
                         // Income Information
                         Group {
-                            Text("Income")
+                            Text("Assets")
                                 .font(.headline)
                                 .foregroundColor(.white)
-                            
-                            CustomTextField(text: $monthlyIncome, placeholder: "Bonds as $", keyboardType: .decimalPad)
-                            CustomTextField(text: $additionalIncome, placeholder: "Cash as $", keyboardType: .decimalPad)
-                            CustomTextField(text: $monthlyIncome, placeholder: "Gold as $", keyboardType: .decimalPad)
-                            CustomTextField(text: $additionalIncome, placeholder: "Stocks as $)", keyboardType: .decimalPad)
+                            CustomTextField(text: $gold, placeholder: "Gold as $", keyboardType: .decimalPad)
+                            CustomTextField(text: $bond, placeholder: "Bond as $", keyboardType: .decimalPad)
+                            CustomTextField(text: $cash, placeholder: "Cash as $", keyboardType: .decimalPad)
+                            CustomTextField(text: $stocks, placeholder: "Stocks as $", keyboardType: .decimalPad)
                         }
                         
                         // Financial Goals
@@ -133,21 +125,6 @@ struct QuestionnaireView: View {
                             
                             CustomTextField(text: $monthlyExpenses, placeholder: "Your monthly fixed expenses", keyboardType: .decimalPad)
                             CustomTextField(text: $existingInvestments, placeholder: "Your existing investments (if any)")
-                        }
-                        
-                        // Risk Tolerance
-                        Group {
-                            Text("Risk Tolerance")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                            
-                            Picker("Risk Tolerance", selection: $selectedRiskTolerance) {
-                                Text(UserProfile.RiskTolerance.low.rawValue).tag(UserProfile.RiskTolerance.low)
-                                Text(UserProfile.RiskTolerance.medium.rawValue).tag(UserProfile.RiskTolerance.medium)
-                                Text(UserProfile.RiskTolerance.high.rawValue).tag(UserProfile.RiskTolerance.high)
-                            }
-                            .pickerStyle(.segmented)
-                            .padding(.horizontal)
                         }
                         
                         // Investment Preferences
