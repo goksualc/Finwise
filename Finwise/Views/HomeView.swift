@@ -228,13 +228,15 @@ struct HomeView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(isPresented: $showPortfolioRecommendation) {
+            .sheet(isPresented: $showPortfolioRecommendation) {
                 StockRecommendationView(riskProfile: RiskProfile.profile(for: selectedRiskScore))
             }
-            .navigationDestination(isPresented: $showEducation) {
-                EducationHomeView()
+            .sheet(isPresented: $showEducation) {
+                NavigationStack {
+                    EducationHomeView()
+                }
             }
-            .navigationDestination(isPresented: $showFAQ) {
+            .sheet(isPresented: $showFAQ) {
                 FAQView()
             }
             .fullScreenCover(isPresented: $showRiskResult) {
