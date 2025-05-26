@@ -203,8 +203,9 @@ struct UserWalletView: View {
                         VStack(spacing: 16) {
                             Text("Select 3-20 Investments for Recommendations")
                                 .font(.headline)
-                                .foregroundColor(accentPurple)
-                                .padding(.horizontal)
+                                .foregroundColor(Color.white)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 4)
                             ForEach(investmentCategories) { category in
                                 VStack(alignment: .leading, spacing: 0) {
                                     Button(action: {
@@ -257,6 +258,7 @@ struct UserWalletView: View {
                                         .padding(.vertical, 8)
                                     }
                                 }
+                                .padding(.horizontal, 12)
                                 .padding(.bottom, 8)
                             }
                             Button(action: {

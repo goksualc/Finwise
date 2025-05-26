@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// MARK: - Fancy Card Component
 struct HomeActionCard: View {
     let title: String
     let subtitle: String
@@ -33,6 +32,7 @@ struct HomeActionCard: View {
                     Text(subtitle)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                        .multilineTextAlignment(.leading)
                 }
                 Spacer()
                 Image(systemName: "chevron.right")
