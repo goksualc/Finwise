@@ -97,7 +97,7 @@ struct HomeView: View {
                     endPoint: .bottomTrailing
                 )
                 .ignoresSafeArea()
-
+                
                 VStack(spacing: 0) {
                     // Header (fixed)
                     HStack {
@@ -122,7 +122,7 @@ struct HomeView: View {
                     }
                     .padding(.horizontal)
                     .padding(.top, 40)
-
+                    
                     // Scrollable content
                     ScrollView(showsIndicators: false) {
                         VStack(spacing: 20) {
@@ -148,7 +148,7 @@ struct HomeView: View {
                                 .shadow(color: accentPurple.opacity(0.08), radius: 8, x: 0, y: 4)
                                 .padding(.horizontal)
                             }
-
+                            
                             // Wallet Card
                             HomeActionCard(
                                 title: "Wallet",
@@ -159,7 +159,7 @@ struct HomeView: View {
                                 showWallet = true
                             }
                             .padding(.horizontal)
-
+                            
                             // Main Action Cards
                             VStack(spacing: 18) {
                                 HomeActionCard(
@@ -170,7 +170,7 @@ struct HomeView: View {
                                 ) {
                                     presentRiskResult()
                                 }
-
+                                
                                 HomeActionCard(
                                     title: "Portfolio Recommendations",
                                     subtitle: "Investment recommendations based on your risk profile.",
@@ -179,7 +179,7 @@ struct HomeView: View {
                                 ) {
                                     showPortfolioRecommendation = true
                                 }
-
+                                
                                 HomeActionCard(
                                     title: "Education Center",
                                     subtitle: "Improve yourself in investment and finance topics.",
@@ -188,7 +188,7 @@ struct HomeView: View {
                                 ) {
                                     showEducation = true
                                 }
-
+                                
                                 HomeActionCard(
                                     title: "FAQ",
                                     subtitle: "Your questions about investment and the app.",
@@ -197,7 +197,7 @@ struct HomeView: View {
                                 ) {
                                     showFAQ = true
                                 }
-
+                                
                                 HomeActionCard(
                                     title: "Social Media Accounts",
                                     subtitle: "Follow us on social media.",
@@ -206,7 +206,7 @@ struct HomeView: View {
                                 ) {
                                     showSocialMedia = true
                                 }
-
+                                
                                 HomeActionCard(
                                     title: "Other Users",
                                     subtitle: "Browse risk profiles and investments anonymously.",
