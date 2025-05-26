@@ -18,18 +18,8 @@ struct UserWalletView: View {
     }
 
     // Dummy data for demonstration; replace with real data from QuestionnaireView
-    @State private var assets: [String: Double] = [
-        "Cash": 1200.0,
-        "Stocks": 3500.0,
-        "Bonds": 2000.0,
-        "Gold": 800.0
-    ]
-    @State private var investments: [String] = [
-        "Large Value ETF",
-        "Tech Growth ETF",
-        "Bond ETF",
-        "Gold ETF"
-    ]
+    @State private var assets: [String: Double] = [:]
+    @State private var recommendedFunds: [String] = []
     private let mintGreen = Color(hex: "8ECFB9")
     private let lightBlue = Color(hex: "6BAADD")
     private let darkBlue = Color(hex: "1E4B8E")
@@ -48,6 +38,8 @@ struct UserWalletView: View {
     @State private var expandedCategories: Set<String> = []
     @State private var showWhatIHaveResult = false
     @State private var whatIHaveRecommendations: [String] = []
+    @State private var isLoadingWallet = false
+    @State private var walletError: String? = nil
 
     func saveWalletToDatabase() {
         guard let userId = Auth.auth().currentUser?.uid else {
@@ -59,7 +51,7 @@ struct UserWalletView: View {
         let db = Firestore.firestore()
         let walletData: [String: Any] = [
             "assets": assets,
-            "investments": investments,
+            "recommendedFunds": recommendedFunds,
             "selectedOptions": Array(selectedOptions)
         ]
         db.collection("userWallets").document(userId).setData(walletData) { error in
@@ -99,6 +91,39 @@ struct UserWalletView: View {
         return recs
     }
 
+    func fetchWalletFromDatabase() {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            self.walletError = "User not found."
+            return
+        }
+        isLoadingWallet = true
+        let db = Firestore.firestore()
+        db.collection("userProfiles").document(userId).getDocument { document, error in
+            isLoadingWallet = false
+            if let error = error {
+                self.walletError = error.localizedDescription
+                return
+            }
+            guard let data = document?.data() else {
+                self.walletError = "No profile data found."
+                return
+            }
+            // Read each asset field directly
+            self.assets = [
+                "Gold": (data["gold"] as? Double) ?? 0,
+                "Cash": (data["cash"] as? Double) ?? 0,
+                "Bond": (data["bond"] as? Double) ?? 0,
+                "Stocks": (data["stocks"] as? Double) ?? 0
+            ]
+            // Fetch recommended funds based on risk score
+            if let riskScore = data["riskProfile"] as? Int ?? data["riskTotalScore"] as? Int {
+                self.recommendedFunds = RiskProfile.profile(for: riskScore).recommendedFunds
+            } else {
+                self.recommendedFunds = []
+            }
+        }
+    }
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -133,13 +158,13 @@ struct UserWalletView: View {
                             Text("Assets")
                                 .font(.headline)
                                 .foregroundColor(mintGreen)
-                            ForEach(assets.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
+                            ForEach(["Gold", "Cash", "Bond", "Stocks"], id: \.self) { key in
                                 HStack {
                                     Text(key)
                                         .font(.body)
                                         .foregroundColor(.primary)
                                     Spacer()
-                                    Text(String(format: "$%.2f", value))
+                                    Text(String(format: "$%.2f", assets[key] ?? 0))
                                         .font(.body)
                                         .foregroundColor(.primary)
                                 }
@@ -149,10 +174,16 @@ struct UserWalletView: View {
                             Text("Investments")
                                 .font(.headline)
                                 .foregroundColor(mintGreen)
-                            ForEach(investments, id: \.self) { inv in
-                                Text("• \(inv)")
+                            if recommendedFunds.isEmpty {
+                                Text("No recommended funds. Complete your risk profile to see recommendations.")
                                     .font(.body)
-                                    .foregroundColor(.primary)
+                                    .foregroundColor(.secondary)
+                            } else {
+                                ForEach(recommendedFunds, id: \.self) { fund in
+                                    Text("• \(fund)")
+                                        .font(.body)
+                                        .foregroundColor(.primary)
+                                }
                             }
                         }
                         .padding()
@@ -269,6 +300,9 @@ struct UserWalletView: View {
                 Button("OK", role: .cancel) {}
             } message: {
                 Text(saveResultMessage)
+            }
+            .onAppear {
+                fetchWalletFromDatabase()
             }
         }
     }
