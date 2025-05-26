@@ -718,15 +718,6 @@ struct UserWalletView: View {
                             .padding(.horizontal)
                             .padding(.top, 8)
                             .disabled(selectedOptions.count < 3 || selectedOptions.count > 20)
-                            .background(
-                                NavigationLink(
-                                    destination: WhatIHaveView(recommendations: whatIHaveRecommendations),
-                                    isActive: $showWhatIHaveResult,
-                                    label: { EmptyView() }
-                                )
-                                .hidden()
-                            )
-                            Spacer(minLength: 24)
                         }
                         .padding(.top, 8)
                     }
