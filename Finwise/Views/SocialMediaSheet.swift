@@ -33,7 +33,7 @@ struct SocialMediaSheet: View {
                 )
                 .ignoresSafeArea()
             )
-            .navigationTitle("Sosyal Medya")
+            .navigationTitle("Social Media")
             .navigationBarTitleDisplayMode(.inline)
         }
     }

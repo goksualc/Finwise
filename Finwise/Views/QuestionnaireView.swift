@@ -18,6 +18,7 @@ struct QuestionnaireView: View {
     @State private var errorMessage = ""
     @State private var isLoading = false
     @State private var showPsychologicalQuestionnaire = false
+    @State private var acceptedKVKK = false
     
     // Brand Colors
     private let mintGreen = Color(hex: "8ECFB9")
@@ -154,6 +155,16 @@ struct QuestionnaireView: View {
                             .cornerRadius(10)
                         }
                         
+                        // Accept KVKK
+                        Toggle(isOn: $acceptedKVKK) {
+                            Text("I have read and accept the KVKK (Personal Data Protection Law)")
+                                .font(.subheadline)
+                                .foregroundColor(.white)
+                        }
+                        .toggleStyle(CheckboxToggleStyle(tint: mintGreen))
+                        .padding(.horizontal)
+                        .padding(.top, 8)
+                        
                         // Save Button
                         Button(action: saveProfile) {
                             if isLoading {
@@ -176,7 +187,7 @@ struct QuestionnaireView: View {
                         )
                         .cornerRadius(10)
                         .padding(.horizontal)
-                        .disabled(isLoading)
+                        .disabled(isLoading || !acceptedKVKK)
                     }
                     .padding()
                 }
@@ -216,5 +227,21 @@ struct CustomTextField: View {
 extension UserProfile.InvestmentType: CaseIterable {
     static var allCases: [UserProfile.InvestmentType] {
         [.deposit, .mutualFunds, .stocks, .commodities, .crypto, .other]
+    }
+}
+
+// Custom checkbox toggle style for KVKK
+struct CheckboxToggleStyle: ToggleStyle {
+    var tint: Color = .accentColor
+    func makeBody(configuration: Configuration) -> some View {
+        Button(action: { configuration.isOn.toggle() }) {
+            HStack {
+                Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
+                    .foregroundColor(configuration.isOn ? tint : .gray)
+                    .font(.title3)
+                configuration.label
+            }
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 } 
