@@ -8,6 +8,12 @@
 import Foundation
 import FirebaseFirestore
 
+extension UserProfile.InvestmentType: CaseIterable {
+    static var allCases: [UserProfile.InvestmentType] {
+        [.deposit, .mutualFunds, .stocks, .commodities, .crypto, .other]
+    }
+}
+
 struct UserProfile: Codable {
     var userId: String
     var age: Int

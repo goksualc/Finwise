@@ -211,45 +211,4 @@ struct QuestionnaireView: View {
             }
         }
     }
-}
-
-struct CustomTextField: View {
-    @Binding var text: String
-    let placeholder: String
-    var keyboardType: UIKeyboardType = .default
-    
-    var body: some View {
-        TextField("", text: $text)
-            .placeholder(when: text.isEmpty) {
-                Text(placeholder).foregroundColor(.gray)
-            }
-            .foregroundColor(.white)
-            .keyboardType(keyboardType)
-            .padding()
-            .background(Color.white.opacity(0.1))
-            .cornerRadius(10)
-            .padding(.horizontal)
-    }
-}
-
-extension UserProfile.InvestmentType: CaseIterable {
-    static var allCases: [UserProfile.InvestmentType] {
-        [.deposit, .mutualFunds, .stocks, .commodities, .crypto, .other]
-    }
-}
-
-// Custom checkbox toggle style for KVKK
-struct CheckboxToggleStyle: ToggleStyle {
-    var tint: Color = .accentColor
-    func makeBody(configuration: Configuration) -> some View {
-        Button(action: { configuration.isOn.toggle() }) {
-            HStack {
-                Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
-                    .foregroundColor(configuration.isOn ? tint : .gray)
-                    .font(.title3)
-                configuration.label
-            }
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
 } 
