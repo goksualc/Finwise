@@ -1,30 +1,5 @@
 import SwiftUI
 
-struct Stock: Identifiable, Decodable {
-    let id = UUID()
-    let symbol: String
-    let displaySymbol: String
-    let description: String
-    let type: String?
-    let mic: String?
-
-    var currentPrice: Double?
-    var previousClose: Double?
-
-    var weeklyChange: Double? {
-        guard let c = currentPrice, let pc = previousClose, pc != 0 else { return nil }
-        return ((c - pc) / pc) * 100
-    }
-
-    enum CodingKeys: String, CodingKey {
-        case symbol
-        case displaySymbol
-        case description
-        case type
-        case mic
-    }
-}
-
 struct StockRecommendationView: View {
     let riskProfile: RiskProfile
 

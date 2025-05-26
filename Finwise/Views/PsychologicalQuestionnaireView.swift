@@ -3,6 +3,7 @@ import FirebaseFirestore
 import FirebaseAuth
 
 struct PsychologicalQuestionnaireView: View {
+    @Binding var showQuestionnaire: Bool
     @Environment(\.dismiss) private var dismiss
     @State private var currentSection = 1
     @State private var showError = false
@@ -54,6 +55,7 @@ struct PsychologicalQuestionnaireView: View {
             } else {
                 totalScore = score
                 navigateToRiskResult = true
+                showQuestionnaire = false
             }
         }
     }

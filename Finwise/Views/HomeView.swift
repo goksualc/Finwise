@@ -185,6 +185,15 @@ struct HomeView: View {
                                 }
                                 
                                 HomeActionCard(
+                                    title: "Other Users",
+                                    subtitle: "Browse risk profiles and investments anonymously.",
+                                    icon: "person.3.fill",
+                                    color: lightBlue
+                                ) {
+                                    showOtherUsers = true
+                                }
+                                
+                                HomeActionCard(
                                     title: "Education Center",
                                     subtitle: "Improve yourself in investment and finance topics.",
                                     icon: "book.closed.fill",
@@ -209,15 +218,6 @@ struct HomeView: View {
                                     color: accentPurple
                                 ) {
                                     showSocialMedia = true
-                                }
-                                
-                                HomeActionCard(
-                                    title: "Other Users",
-                                    subtitle: "Browse risk profiles and investments anonymously.",
-                                    icon: "person.3.fill",
-                                    color: lightBlue
-                                ) {
-                                    showOtherUsers = true
                                 }
                             }
                             .padding(.horizontal)
@@ -248,7 +248,7 @@ struct HomeView: View {
                 Text(errorMessage)
             }
             .fullScreenCover(isPresented: $showQuestionnaire) {
-                QuestionnaireView()
+                QuestionnaireView(showQuestionnaire: $showQuestionnaire)
             }
             .sheet(isPresented: $showSocialMedia) {
                 SocialMediaSheet()

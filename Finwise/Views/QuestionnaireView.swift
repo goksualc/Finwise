@@ -3,6 +3,7 @@ import FirebaseFirestore
 import FirebaseAuth
 
 struct QuestionnaireView: View {
+    @Binding var showQuestionnaire: Bool
     @Environment(\.dismiss) private var dismiss
     @State private var age = ""
     @State private var gold = ""
@@ -199,7 +200,7 @@ struct QuestionnaireView: View {
                 Text(errorMessage)
             }
             .navigationDestination(isPresented: $showPsychologicalQuestionnaire) {
-                PsychologicalQuestionnaireView()
+                PsychologicalQuestionnaireView(showQuestionnaire: $showQuestionnaire)
             }
         }
     }
