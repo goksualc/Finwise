@@ -1,3 +1,10 @@
+//
+//  UserProfile.swift
+//  Finwise
+//
+//  Created by Göksu Alçınkaya on 5/26/25.
+//
+
 import Foundation
 import FirebaseFirestore
 
